@@ -35,6 +35,7 @@ public class Member {//repository에 저장하려면 entity가 필요함
 
     //디티오로 받아서 엔티티로 저장해야함 그 과정에서 인코딩 할거임??      //스프링빈은 스프링 빈끼리만 주입 가능해서 passwordEncoder 스프링 빈이어도 주입 불가 밖에서 받아 들어와야함
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
+        //깃 테스트
         Member member = new Member();
         member.setName(memberFormDto.getName());
         member.setEmail(memberFormDto.getEmail());
