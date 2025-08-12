@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "cart_item")
 @Getter
 @Setter
-public class CartItem {
+public class CartItem extends BaseEntity {
 
     @Id
     @Column(name = "cart_item_id")
@@ -19,12 +19,12 @@ public class CartItem {
 
 
     //다는 카트 아이템 1은 카트 필드 (흰 글씨)
-    @ManyToOne //카트 아이템 쪽이 다이기 때문에
+    @ManyToOne(fetch = FetchType.LAZY) //카트 아이템 쪽이 다이기 때문에
     //아이디 타입 x 엔티티 타입 그대로 써준다?
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id") //부모타입의 pk랑 이름 같아야?한다? 들어가보면  item id
     private Item itme;
 

@@ -103,6 +103,7 @@ class CartTest {
 
         // 이거는 객체(JPA) 관점 이게 JPA의 핵심이다? 우리가 조인 안하고 우리가 카트 조회하는 순간 카트에 걸려있는 연관관계 떄문에 JOIN 쿼리가 날아간다. 그래서 카트 안에서 바로 멤버 꺼내ㅆ쓸수 있다?
         Member foundMember = savedCart.getMember();
+        foundMember.getEmail();
 
         System.out.println("저장하고난 후 cart의 주소값 : " + savedCart.hashCode());
         System.out.println("저장하고난 후 member의 주소값 " + foundMember.hashCode());

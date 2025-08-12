@@ -1,6 +1,7 @@
 package com.shop.entity;
 
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.shop.constant.Role;
 import com.shop.dto.MemberFormDto;
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Setter
 @ToString
-public class Member {//repository에 저장하려면 entity가 필요함
+public class Member extends BaseEntity {//repository에 저장하려면 entity가 필요함
 
     @Id
     @Column(name="member_id")
