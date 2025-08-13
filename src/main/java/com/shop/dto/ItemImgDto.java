@@ -17,7 +17,7 @@ public class ItemImgDto {
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    private static ItemImgDto of(ItemImg itemImg) {
+    public static ItemImgDto of(ItemImg itemImg) {
 
         //이렇게 써도 상관은 없음 쓸때마다 모델매퍼 객체가 만들었다가 없어지긴 하지만
 //        ModelMapper mapper = new ModelMapper();

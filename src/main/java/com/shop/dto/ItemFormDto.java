@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 public class ItemFormDto {
 
 
@@ -28,11 +30,13 @@ public class ItemFormDto {
     private String itemDetail;
 
     @NotNull(message = "재고는 필수 입력 값입니다.")
-    private String stockNumber;
+    private Integer stockNumber;
 
     private ItemSellStatus itemSellStatus;
 
     private List<ItemImgDto> itemImgDtoList = new ArrayList<>();
+                        //이 이름이 동일한게 중요 그리고 여러게 넘어올거니 list 뷰에 있는거랑 이ㅡㄻ같음
+    private List<Long> itemImgIds = new ArrayList<>();
 
     private static ModelMapper modelMapper = new ModelMapper();
 

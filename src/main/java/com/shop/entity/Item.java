@@ -1,6 +1,7 @@
 package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
+import com.shop.dto.ItemFormDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +36,15 @@ public class Item extends BaseEntity {
                 // db에 저장할 때 문자열로 저장한다. enum은 자바의 개념이라서 db는 모름 문자열로 값 주고 받는다.
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
+
+    public void updateItem(ItemFormDto itemFormDto) {
+        this.itemNm = itemFormDto.getItemNm(); //this에 item네임 디티오에 있는거로 업데이트
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+
+    }
 
 //    private LocalDateTime regTime;
 //

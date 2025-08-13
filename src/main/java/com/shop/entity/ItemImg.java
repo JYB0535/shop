@@ -24,4 +24,10 @@ public class ItemImg {
     private String imgUrl; //이미지 조회 경로
     private String repImgYn; //대표 이미지 여부
 
+    public void updateItemImg(String oriImgName, String imgName, String imgUrl) {
+        this.oriImgName = oriImgName;
+        this.imgName = imgName;
+        this.imgUrl = imgUrl;
+    }
+
 }
