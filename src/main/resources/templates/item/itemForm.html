@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="css">
+    <style>
+        .input-group {
+            margin-bottom: 15px;
+
+        }
+
+        .img-div {
+            margin-bottom: 10px;
+        }
+
+        /*뭐가 누락되거나 했을때 인풋 태그 보여줄거*/
+        .fieldError {
+            color: #bd2130;
+        }
+    </style>
+</th:block>
+<div layout:fragment="content">                            <!-- 아까 모델에 전달한거 여기에 없는 필드 매핑하려고 하면 알려준다 -->
+    <form method="post" enctype="multipart/form-data" th:object="${itemFormDto}">
+        <!--폼을 전송하는 방식 2가지
+폼 구성형식 중에 FormData가 있는데
+1.url 형태로 인코딩(name=name & age=10) enctype 중에 기본값 x-www-form~
+2. multipart 주로 파일이랑 같이 전송 얘는 규격이 있다? 다양한 데이터 Format을 한번에 전송하기 위한 인코딩 방식임  위에 있느 www 어쩌고~는 텍스트 전용 근데 이방식은 파일이나 텍스트 덩어리나 뭉쳐서 보내기 가능 상대쪽에서는 쪼개기 편함
+-->
+
+        <p class="h2">상품 등록</p>
+        <input type="hidden" th:field="*{id}">
+        <div class="form-group">                                    <!--mb 3은 마진 바텀 -->
+            <select th:field="*{itemSellStatus}" class="form-select mb-3"> <!--th필드가 3개를 다 채워줌 밑에 있음 -->
+                <option value="SELL">판매중</option>
+                <option value="SOLD_OUT">품절</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <span class="input-group-text">상품명</span>
+                       <!--th:field는 해석될때 타임리프 문법이 name 이랑 id value에 공통된 값 들어감 3개의 속성을 한번에 써주는거?? value는 값이 들어있는 객체면 들어갔을거지마 ㄴ지금은 아니라서  0 formDto에 itemNm-->
+            <input type="text" th:field="*{itemNm}" class="form-control" placeholder="상품명을 입력해주세요">
+        </div>
+        <p th:if="${#fields.hasErrors('itemNm')}" th:errors="*{itemNm}" class="fieldError"></p>
+
+        <div class="input-group">
+            <span class="input-group-text">가격</span>
+            <input type="number" th:field="*{price}" class="form-control" placeholder="상품의 가격을 입력해주세요">
+        </div>
+        <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError"></p>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">재고</span>
+            </div>
+            <input type="number" th:field="*{stockNumber}" class="form-control" placeholder="상품의 재고를 입력해주세요">
+        </div>
+        <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError"></p>
+
+        <div class="input-group">
+            <span class="input-group-text">상품 상세 내용</span>
+            <textarea th:field="*{itemDetail}" class="form-control"></textarea>
+        </div>
+        <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError"></p>
+
+                                <!-- 이거 원래 리스트 처럼? 쓰는 거였는데 없다고 해도 타임리프 문법이 있다 타임리프 내장객체 .. num 임시 변수 -->
+        <div th:if="${#lists.isEmpty(itemFormDto.itemImgDtoList)}"> <!-- 이 리스트가 비어있으면 (등록)-->
+            <div class="input-group img-div" th:each="num: ${#numbers.sequence(1,5)}">
+                <input type="file" class="form-control file-input" name="itemImgFile"> <!-- 공백으로 띄ㅜ어쓰면 클래스 2개 -->
+                <label class="input-group-text" th:text="상품이미지 + ${num}"></label><!--레이블 안에 들어가는 텍스트 타임리프로 동적 생산 -->
+            </div>
+        </div>
+
+        <!--아이템 리스트가 비어있지 않을때 (수정)-->
+        <div th:if="${not #lists.isEmpty(itemFormDto.itemImgDtoList)}">
+            <div class="input-group img-div" th:each="itemImgDto, status: ${itemFormDto.itemImgDtoList}">
+                <input type="file" class="form-control file-input" name="itemImgFile"> <!-- 공백으로 띄ㅜ어쓰면 클래스 2개 -->
+                <input type="hidden" name="itemImgIds" th:value="${itemImgDto.id}"> <!--itemImgDto의 id는 pk -->
+                <label class="input-group-text" th:text="${not #strings.isEmpty(itemImgDto.oriImgName)} ? ${itemImgDto.oriImgName} : '상품 이미지' + ${status.index+1}"></label><!--레이블 안에 들어가는 텍스트 타임리프로 동적 생산 -->
+            </div>
+        </div>
+             <!-- 수직정렬 센터 -->
+        <div th:if="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center"> <!-- 이 버튼 클릭했을때 포스트 메서드 받는 컨트롤러로 보내준다?-->
+            <!-- form에 액션 넣어줘서 경로 적어줘야 제출했을때 할 동작하는데 타임리프에서는 버튼별로 다르게 가능-->
+            <button th:formaction="@{/admin/item/new}" type="submit" class="btn btn-primary">저장</button>
+        </div>
+
+        <div th:unless="${#strings.isEmpty(itemFormDto.id)}" style="text-align: center">
+            <button th:formaction="@{'/admin/item/' + ${itemFormDto.id}}" type="submit" class="btn btn-primary">수정</button>
+        </div>
+
+        <!-- 토큰 있어야함 아니면 post로 아무리 요청 날려도 다 거절된다-->
+        <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
+    </form>
+
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        //jquery문법
+        $(document).ready(() => {
+            var errorMessage = [[${errorMessage}]]; //여기 빨간 줄은 신경 안 써도 된다
+            if(errorMessage != null) {
+                alert(errorMessage);
+            }
+
+            $(".file-input").on("change", (e) => {
+                //파일명 this.value 속성에 들어있음 이거 가지고 와서 확장자 잘 분리하고 검사
+                //파일명 = this.value ==> 확장자 분리 ==> 검사
+                var fileName = $(e.target).val().split("\\").pop(); //자바스크립트는 스플릿 하면 배열이 된다. 제일 뒤에 있는거 꺼내는건 pop
+               // alert(fileName);
+                var fileExt = fileName.substring(fileName.lastIndexOf(".") +1 ); //+1이 있어야 점 없이 나옴
+                fileExt = fileExt.toLowerCase();
+
+                if(fileExt != "jpg" &&
+                    fileExt != "jpeg" &&
+                    fileExt != "gif" &&
+                    fileExt != "png" &&
+                    fileExt != "bmp") {
+                    alert("이미지 파일만 등록이 가능합니다.");
+                    $(e.target).val("");
+                }
+                   //alert(fileExt);
+            })
+        });
+        //console.log("페이지 전용 스크립트");
+
+    </script>
+</th:block>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/layout1}">
+<!--~ 은 폼 디렉토리-->
+    <th:block layout:fragment="css">
+        <style>
+            div{
+                /*background-color: #aaa;*/
+            }
+
+        </style>
+    </th:block>
+    <div layout:fragment="content">
+        본문 영역 입니다.
+    </div>
+
+    <th:block layout:fragment="script">
+        <script>
+            console.log("페이지 전용 스크립트");
+        </script>
+    </th:block>
+</html>

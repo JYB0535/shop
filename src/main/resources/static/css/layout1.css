@@ -1,0 +1,26 @@
+    html {
+        position: relative;
+        min-height: 100%; /*내용물 적어도 화면 꽉 채우게*/
+        margin: 0;
+    }
+
+    /*html이랑 같은 너비 가져감*/
+    body {
+        min-height: 100%;
+    }
+
+    /* .어쩌고는 클래스 선택자 밑에 content도 클래스 선택자임*/
+    .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        width: 100%; /*왼 오른쪽 꽉 채우게 */
+        padding: 15px 0;
+        text-align: center; /*text align은 세로 정렬 클래스에 가로 가운데 정렬은 있음*/
+    }
+
+    .content {
+        margin: 50px 200px 100px;
+    }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>쇼핑몰 예제</title>
+    <link th:href="@{/css/layout1.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>      <!--//p.138 번들에 드롭다운 팝오버 등 들어감 교재에 3줄인건 popper를 따로 넣어서 그럼 우리는 번들이라 다 들어가있음 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+<!--    <style>-- 이제 이거 필요 없음 -->
+<!--        /*공통 스타일 입니다.*/-->
+<!--    </style>-->
+    <th:block layout:fragment="css"></th:block>
+
+
+    <script>/*공통스크립트 입니다.*/
+    console.log("공통 스크립트");
+    </script>
+
+</head>
+<body>
+
+<!--<div>--잘라내서 header html에 넣어줌-->
+<!--    header 영역 입니다.-->
+
+<!--header.html에 있는거 떙겨옴-->
+<!--  폴더 파일 경로    이거는 조각 이름 header에 잇는 th:fragment-->
+<div th:replace="~{fragments/header::header}"></div>
+<!--    컨텐츠 영역-->
+<div layout:fragment="content" class="content"></div>
+
+<!--    푸터 영역-->
+
+<!--</div>-->
+<div th:replace="~{fragments/footer::footer}"></div>
+<!--    흔적 없이 타임리프 적용 시키고 싶을때 -->
+
+<th:block layout:fragment="script"></th:block>
+
+</body>
+</html>
