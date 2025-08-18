@@ -84,7 +84,7 @@ public class ItemService {
 
     @Transactional(readOnly = true)
     public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
-        return itemRepository.getAdminPage(itemSearchDto, pageable);
+        return itemRepository.getAdminItemPage(itemSearchDto, pageable);
     }
 
     @Transactional(readOnly = true)

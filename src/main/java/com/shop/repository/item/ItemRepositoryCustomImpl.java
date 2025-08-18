@@ -26,6 +26,8 @@ import static com.shop.entity.QItemImg.itemImg;
 @RequiredArgsConstructor
 public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
+    // JPAQueryFactory를 주입받아 Querydsl 쿼리를 생성
+    private final EntityManager em;
     private final JPAQueryFactory jpaQueryFactory;
 
 //    private JPAQueryFactory queryFactory;
@@ -36,6 +38,10 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
     private BooleanExpression regDtsAfter(String searchDateType) {
         /* saerchDateType 화면 ==> "all", "1d", "1w", "1m", "6m" */
+        // 현재 시간을 기준으로 검색 시작 시간을 계산
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        // StringUtils.equals를 사용하여 NullPointerException 방지 및 문자열 비교
         LocalDateTime now = LocalDateTime.now();
 
         if(StringUtils.equals(searchDateType, "1d")) {
@@ -49,7 +55,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         }else if(StringUtils.equals(searchDateType, "all") || searchDateType == null) {
             return null;
         }
-
+        // item.regTime이 계산된 시간(now) 이후인 조건을 반환
         return item.regTime.after(now);
     }
 
@@ -57,6 +63,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
         if(itemSellStatus == null) {
             return null;
         }
+        // item.itemSellStatus가 주어진 itemSellStatus와 같은 조건을 반환
         return item.itemSellStatus.eq(itemSellStatus);
     }
 
@@ -72,7 +79,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Page<Item> getAdminPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
         /*
         목적 : item 테이블에서 검색 조건에 맞는 결과를 페이지 단위로 조회
         조건 1. searchDateType에 따라 검색 기간 설정
@@ -98,19 +105,30 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                         searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                         searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery())) // 조건1~3 중 null이 들어가는 경우 ==> 무시
                 .orderBy(item.id.desc())
+                // 페이징 처리를 위해 offset과 limit 설정
                 .offset(pageable.getOffset()) //현재 페이지
                 .limit(pageable.getPageSize())
+                // 쿼리 실행 및 결과 리스트 반환
                 .fetch();
 
-        Long total = jpaQueryFactory.select(Wildcard.count).from(item)
+         /*
+        SELECT count(*)
+        From item
+        WHERE 조건1 AND 조건2 AND 조건3
+        */
+
+        Long totalCount = jpaQueryFactory.select(Wildcard.count).from(item)
                         .where(regDtsAfter(itemSearchDto.getSearchDateType()),
                                 searchSellStatusEq(itemSearchDto.getSearchSellStatus()),
                                 searchByLike(itemSearchDto.getSearchBy(), itemSearchDto.getSearchQuery()))
                         .fetchOne();
 
-        if(total == null) total = 0L;
+        //COUNT 쿼리면 totalCount 결과는 null 될 수 있음
+        //==> null을 안전하게 다루기 위해 Optional 타입으로 한번 감싼다.
+        Optional<Long> total = Optional.ofNullable(totalCount);
 
-        return new PageImpl<>(content, pageable, total);
+        //total ==> Optional 타입을 이용해 Null  안전하게 처리한다.
+        return new PageImpl<>(content, pageable, total.orElse(0L));
     }
 
     @Override
@@ -140,8 +158,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .where(itemImg.repImgYn.eq("Y"))
                 .where(searchByLike("itemNm", itemSearchDto.getSearchQuery()))
                 .fetchOne();
-        Optional<Long> total = Optional.ofNullable(totalCount);
 
+        Optional<Long> total = Optional.ofNullable(totalCount);
         return new PageImpl<>(content, pageable, total.orElse(0L));
 
     }

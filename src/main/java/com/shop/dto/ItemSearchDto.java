@@ -12,7 +12,7 @@ public class ItemSearchDto {
 
     private ItemSellStatus searchSellStatus;
 
-    private String searchBy="";
+    private String searchBy;
 
     private String searchQuery = "";
 

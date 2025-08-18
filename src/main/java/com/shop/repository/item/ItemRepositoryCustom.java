@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 public interface ItemRepositoryCustom {
 
-    Page<Item> getAdminPage(ItemSearchDto itemSearchDto, Pageable pageable);
+    Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
     Page<MainItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable);
 
 }
