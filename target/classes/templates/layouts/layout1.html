@@ -13,6 +13,11 @@
 <!--    </style>-->
     <th:block layout:fragment="css"></th:block>
 
+<!--    이렇게 해야 각 머시기에 다 csrf담긴다?-->
+    <meta name="_csrf" th:content="${_csrf.getToken()}"/>
+    <meta name="_csrf_header" th:content="${_csrf.getHeaderName()}"/>
+
+
 
     <script>/*공통스크립트 입니다.*/
     console.log("공통 스크립트");

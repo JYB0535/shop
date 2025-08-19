@@ -18,6 +18,10 @@ public interface ItemImgRepository extends JpaRepository<ItemImg, Long> {
     WHERE item_id = ?
     ORDER BY item_img_id ASC
     */
+
     List<ItemImg> findByItemIdOrderByIdAsc(Long itemId);
+
+    //이거는 간단하니까 쿼리 메서드로 쓴다
+    ItemImg findByItemIdAndRepImgYn(Long itemId, String repImgYn);
 
 }

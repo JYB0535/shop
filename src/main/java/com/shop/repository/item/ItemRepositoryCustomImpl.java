@@ -70,9 +70,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private BooleanExpression searchByLike(String searchBy, String searchQuery) {
         // 무엇을 기준으로(searchBy) 검색할 키워드(searchQuery)
         // searchBy 화면 ==> "itemNm", "createdBy"
-        if(searchBy.equals("itemNm")) {
+        if(StringUtils.equals(searchBy, "itemNm")) {
             return item.itemNm.like("%" + searchQuery + "%");
-        }else if(searchBy.equals("createdBy")) {
+        }else if(StringUtils.equals(searchBy, "createdBy")) {
             return item.createdBy.like("%" + searchQuery + "%");
         }
         return null; //둘 다 실행안하고 내려왔을때 리턴

@@ -50,6 +50,33 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus; //enum 타입  넣어줄때 @Enumerated 넣어줘야함
 
+    //프라이빗으로 한 이유는 이 안에서만 호출할거라 명확하게 하려고
+    private void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this); //오더 아이템의 오더 필드도 현재 오더로 세팅해준다? 서로 연관 시킨다? fk 쪽에도 오더 넣어주고 오더에서 참조하는 오더 아이템에도 추가해준다.
+
+    }
+
+    public static Order createOrder(Member member, List<OrderItem> orderItemList) { //누가 주문했는지 필요해서 멤버를 매개변수로 받고 누가 어떤 품목 몇개씩 주문했다 오더 아이템 리스트, 단일 오더 아이템으로 안 받는 이유? 나중에 장바구니 만들어야하니까 그냥 여러개 받을 수 있는거로 만든다.
+        Order order = new Order();
+        order.setMember(member);
+        for (OrderItem orderItem : orderItemList) { //밖ㅇ에서 들어온거 채우는거
+            order.addOrderItem(orderItem);
+        }
+
+        //고정 값
+        order.setOrderStatus(OrderStatus.ORDER);
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getOrderPrice();
+        }
+        return totalPrice;
+    }
 //
 //    private LocalDateTime regTime;
 //

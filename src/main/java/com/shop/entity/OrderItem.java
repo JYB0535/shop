@@ -30,6 +30,19 @@ public class OrderItem extends BaseEntity {
 
     private Integer count;
 
+    public static OrderItem createOrderItem(Item item, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setCount(count);
+        orderItem.setOrderPrice(item.getPrice()); //합계 가격이 아니라 그냥 가격????
+        item.removeStock(count);
+        return orderItem;
+    }
+
+    public int getTotalPrice() {
+        return orderPrice * count;
+    }
+
 //이거 지우고 베이스 엔티티 상속
 //    private LocalDateTime regTime;
 //
