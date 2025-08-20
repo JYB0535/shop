@@ -146,7 +146,52 @@
 
                 }
 
-            })
+            });
+
+        }
+
+        function addCart() {
+            var header = $("meta[name='_csrf_header']").attr("content") //헤더 네임
+            var token = $("meta[name='_csrf']").attr("content") //헤더 값
+
+            //alert(header + ":" + token);
+
+            var paramData = {
+                itemId: $("#itemId").val(),//제이 쿼리로 돔요소 가지고 오기
+                count: $("#count").val()
+            }
+
+            $.ajax({
+                //요청하는데 필요한 설정
+                url: "/cart",
+                type: "POST",
+                data: JSON.stringify(paramData),
+                contentType: "application/json",
+
+                //비동기 요청 전에 실행하고 싶은거있으면 이거 하면 된다 xhr 비동기 연결 매개하는거
+                beforeSend: function (xhr) {
+                    //헤더 네임, //헤더 값
+                    xhr.setRequestHeader(header, token);
+                },
+                //받을 데이터 타입
+                dataType: "json",
+                cache: false,
+                success: function (result, status) {
+                    alert("상품을 장바구니에 담았습니다.");
+                    location.href="/";
+                },
+                error: function(jqXHR, status, error) { //로그인 안 된 유저가 주문하려 하면 401만 네트워크에 날아오고 반응이 없음 유저가 알 수 있게 처리
+                    if(jqXHR.status == '401') {
+                        alert("로그인 후 이용해주세요.");
+                        location.href="/members/login";
+                    }else {
+                        alert(jqXHR.responseText); //401은 아닌데 401은 아닌 오류
+                    }
+
+                }
+
+            });
+
 
         }
 

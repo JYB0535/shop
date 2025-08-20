@@ -33,7 +33,7 @@ public class QCartItem extends EntityPathBase<CartItem> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QItem itme;
+    public final QItem item;
 
     //inherited
     public final StringPath modifiedBy = _super.modifiedBy;
@@ -63,7 +63,7 @@ public class QCartItem extends EntityPathBase<CartItem> {
     public QCartItem(Class<? extends CartItem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.cart = inits.isInitialized("cart") ? new QCart(forProperty("cart"), inits.get("cart")) : null;
-        this.itme = inits.isInitialized("itme") ? new QItem(forProperty("itme")) : null;
+        this.item = inits.isInitialized("item") ? new QItem(forProperty("item")) : null;
     }
 
 }

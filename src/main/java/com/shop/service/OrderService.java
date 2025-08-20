@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,21 @@ public class OrderService {
 
 
     //오더 아이템 리포지토리는 필요없나? ==> 머 캐스케이드 어쩌고 해서 말햇는데 기억 안남
+
+    public Long orders(List<OrderDto> orderDtoList, String email) {
+        Member member = memberRepository.findByEmail(email);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        for (OrderDto orderDto : orderDtoList) {
+            Item item = itemRepository.findById(orderDto.getItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+            orderItemList.add(orderItem);
+        }
+
+        Order order = Order.createOrder(member, orderItemList); //오더 엔티티 생성, 스태틱 메서드 만들어둔거 있다?
+        orderRepository.save(order);
+        return order.getId();
+    }
 
     public Long order(OrderDto orderDto, String email) {
         /*
@@ -86,4 +102,23 @@ public class OrderService {
         }
         return new PageImpl<>(orderHistDtoList, pageable, totalCount); //페이지 객체 만들어서 반환
     }
-}
+
+    public void cancelOrder(Long orderId) {
+        //orderId가 같은 Order 엔티티를 조회해서 cancelOrder() 호출
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+    }
+                                                //이메일은 authentication의 getName 으로 받아온거?
+    public boolean validateOrder(Long orderId, String email) {
+        //orderId로 조회된 Order 엔티티의 member.email == email ??
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+
+            return StringUtils.equals(email, order.getMember().getEmail());
+
+        }
+
+    }
+
+

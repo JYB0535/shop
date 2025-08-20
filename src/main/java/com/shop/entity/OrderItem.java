@@ -43,6 +43,10 @@ public class OrderItem extends BaseEntity {
         return orderPrice * count;
     }
 
+    public void cancel() {
+        this.item.addStock(count);
+    }
+
 //이거 지우고 베이스 엔티티 상속
 //    private LocalDateTime regTime;
 //

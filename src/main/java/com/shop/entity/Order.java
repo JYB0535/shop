@@ -2,6 +2,7 @@ package com.shop.entity;
 
 import com.shop.constant.OrderStatus;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
@@ -76,6 +77,13 @@ public class Order extends BaseEntity {
             totalPrice += orderItem.getOrderPrice();
         }
         return totalPrice;
+    }
+
+    public void cancelOrder() {
+        for(OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+        this.orderStatus = OrderStatus.CANCEL;
     }
 //
 //    private LocalDateTime regTime;

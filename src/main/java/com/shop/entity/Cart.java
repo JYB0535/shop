@@ -27,4 +27,11 @@ public class Cart extends BaseEntity {
     @JoinColumn(name = "member_id", unique = true)
     private Member member;
     //private Long member_id ==> 이렇게 표현 x fk설정할때는 엔티티타입 그대로 넣어준다
+
+    //카트는 최초 한번만 만들어지면 된다. 있으면 조회 없으면 만들기로 사용될 엔티티
+    public static Cart createCart(Member member) {
+        Cart cart = new Cart();
+        cart.setMember(member);
+        return cart;
+    }
 }

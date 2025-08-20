@@ -78,4 +78,20 @@ public class OrderController {
         model.addAttribute("maxPage", 5);
         return "order/orderHist"; //뷰로 보내줌
     }
+
+    //얘도 비동기로 동작할거임
+    //여기 왜 @ResponseBody가 없는가? 이거 붙었을떄만 뷰 안 찾고 바디에 값 실어서 그대로 응답하는데 안 붙여도 되는 경우는 ResponseEntity 자체가 바디에 값 실어서 응답하겠다는거 뷰 안 찾겠다는 거다.
+    //원래 위치는 클래스쪽이 아니라 반환타입 옆에 붙여줘야함 ResponseEntity<>있어서 생략해도 상관없다
+    @PostMapping("/order/{orderId}/cancel")
+    public @ResponseBody ResponseEntity<?> cancelOrder(@PathVariable Long orderId,
+                                         Authentication authentication) {//취소 요청 보낸 유저가 누군지 알아야하니까
+        if(!orderService.validateOrder(orderId, authentication.getName())){ //이 아이디 주문이 저 유저가 한게 맞냐 검사하는거 if문 안에 들어왔다는건 내 주문이 아닌데 주문하려고 했다는거
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.",
+                    HttpStatus.FORBIDDEN);
+        }
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok().body(orderId);
+
+    }
+
 }

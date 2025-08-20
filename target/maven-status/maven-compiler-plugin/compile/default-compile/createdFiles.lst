@@ -10,7 +10,6 @@ com\shop\entity\BaseTimeEntity.class
 com\shop\entity\Order.class
 com\shop\service\MemberService.class
 com\shop\dto\ItemFormDto.class
-com\shop\repository\OrderRepository.class
 com\shop\entity\QCartItem.class
 com\shop\entity\BaseEntity.class
 com\shop\config\AuditConfig.class
@@ -36,6 +35,7 @@ com\shop\dto\ItemImgDto.class
 com\shop\constant\Role.class
 com\shop\controller\ItemController.class
 com\shop\dto\ItemDto.class
+com\shop\repository\cartItem\CartItemRepositoryCustomImpl.class
 com\shop\config\CustomAccessDeniedHandler.class
 com\shop\entity\Cart.class
 com\shop\repository\CartRepository.class

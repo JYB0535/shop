@@ -47,7 +47,7 @@
         <div class="d-flex mb-3 align-self-center">
             <h4 th:text="${order.orderDate} + ' 주문'"></h4>
             <div class="ml-3">
-                <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
+                <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">                          <!-- //디스를 매개변수로 넣는건 버튼 돔 객체 자체(본인)를 넣어서 반환-->
                     <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="cancelOrder(this)">주문취소</button>
                 </th:block>
                 <th:block th:unless="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
@@ -91,12 +91,40 @@
             </li>
         </ul>
     </div>
-
 </div>
 
 <th:block layout:fragment="script">
-    <script>
-        console.log("페이지 전용 스크립트");
+    <script>                //버튼 돔 객체 그대로 받음
+        function cancelOrder(orderBtn) {
+            var orderId = orderBtn.value;
+
+            var header = $("meta[name='_csrf_header']").attr("content") //
+            var token = $("meta[name='_csrf']").attr("content") //
+
+            $.ajax({
+                //요청하는데 필요한 설정
+                url: "/order/" + orderId + "/cancel",
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+
+                dataType: "json",
+                cache: false,
+                success: function (result, status) {
+                    alert("주문이 취소 되었습니다.");
+                    $(orderBtn).parent().html("<h4>(취소 완료)</h4>") //취소 버튼 부모 찾아서 취소완룔로 덮어씌우기?
+                },
+                error: function(jqXHR, status, error) {
+                    if(jqXHR.status == '401') {
+                        alert("로그인 후 이용해주세요.");
+                        location.href="/members/login";
+                    }else {
+                        alert(jqXHR.responseText);
+                    }
+                }
+            })
+        }
     </script>
 </th:block>
 </html>
